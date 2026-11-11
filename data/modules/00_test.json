@@ -1,0 +1,11 @@
+{
+  "module_id": "test_01",
+  "title": "Ma première leçon de test",
+  "theory": "Ceci est le texte explicatif de la théorie.",
+  "flashcards": [
+    {
+      "question": "Que fait la fonction print() ?",
+      "answer": "Elle affiche du texte dans la console."
+    }
+  ]
+}
