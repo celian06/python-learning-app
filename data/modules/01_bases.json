@@ -1,0 +1,25 @@
+{
+  "module_id": "python_01",
+  "title": "Variables et Fonctions : Les Fondations",
+  "difficulty": "Débutant",
+  "theory": "En Python, une variable est un espace mémoire nommé qui stocke une donnée. Le typage est dynamique : pas besoin de déclarer le type (int, str) à l'avance. Une fonction (définie par 'def') est un bloc de code réutilisable qui prend des arguments en entrée et retourne un résultat avec 'return'.",
+  "flashcards": [
+    {
+      "question": "Comment définir une fonction en Python ?",
+      "answer": "En utilisant le mot-clé 'def' suivi du nom de la fonction, de parenthèses et de deux-points (:)."
+    },
+    {
+      "question": "Le typage en Python est-il statique ou dynamique ?",
+      "answer": "Dynamique. Le type d'une variable est déduit lors de l'exécution en fonction de la valeur qui lui est assignée."
+    },
+    {
+      "question": "Quel mot-clé est utilisé pour renvoyer une valeur à la fin d'une fonction ?",
+      "answer": "Le mot-clé 'return'."
+    }
+  ],
+  "code_quiz": {
+    "snippet": "x = 10\ndef add_five(num):\n    return num + 5\n\nx = add_five(x)\nprint(x)",
+    "options": ["10", "15", "5", "Erreur"],
+    "correct_answer": "15"
+  }
+}
