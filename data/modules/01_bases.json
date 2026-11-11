@@ -21,5 +21,17 @@
     "snippet": "x = 10\ndef add_five(num):\n    return num + 5\n\nx = add_five(x)\nprint(x)",
     "options": ["10", "15", "5", "Erreur"],
     "correct_answer": "15"
+  },
+
+  "project": {
+    "title": "Niveau 1 : La fonction de base",
+    "description": "Écris une fonction nommée 'calculer_prix_ttc' qui prend un prix hors taxe (float) et un taux de TVA (float, par exemple 0.20) et retourne le prix TTC arrondi à 2 décimales.",
+    "target_function": "calculer_prix_ttc",
+    "test_cases": [
+      {"input": [100.0, 0.20], "expected": 120.0},
+      {"input": [50.0, 0.05], "expected": 52.5}
+    ]
   }
+
+  
 }
