@@ -6,9 +6,9 @@ from nicegui import ui
 # Configuration des chemins
 BASE_DIR = Path(__file__).parent
 sys.path.append(str(BASE_DIR))
-from core import validator
+from core import validator, db
 
-# 1. Fonction pour charger tous les JSON du dossier data/modules
+# 1. Fonction pour charger tous les JSON
 def load_lessons():
     lessons = []
     modules_dir = BASE_DIR / "data" / "modules"
@@ -25,7 +25,7 @@ def main_page():
     # --- EN-TÊTE ---
     with ui.header().classes('bg-blue-900 justify-between items-center p-4'):
         ui.label('Python Learning App').classes('text-h5 font-bold')
-        ui.button(icon='menu', on_click=lambda: sidebar.toggle()).props('flat color=white')
+        ui.button('Menu', on_click=lambda: sidebar.toggle()).props('flat color=white')
 
     # --- CONTENEUR PRINCIPAL ---
     main_content = ui.column().classes('w-full max-w-4xl mx-auto p-4')
@@ -46,7 +46,7 @@ def main_page():
                 with ui.card().classes('w-full mb-6 p-4'):
                     ui.label('Flashcards').classes('text-h5 font-bold mb-4')
                     for card in lesson['flashcards']:
-                        with ui.expansion(card['question'], icon='help_outline').classes('w-full bg-gray-800 text-white rounded mb-2'):
+                        with ui.expansion(card['question']).classes('w-full bg-gray-800 text-white rounded mb-2'):
                             ui.label(card['answer']).classes('italic p-2 text-green-300')
 
             # Bloc Projet
@@ -65,8 +65,11 @@ def main_page():
                         result_label.set_text("Évaluation en cours...")
                         success = validator.evaluate_code(editor.value, project['target_function'], project['test_cases'])
                         if success:
+                            # Mise à jour UI
                             result_label.set_text("[SUCCÈS] Code validé. Tous les tests sont passés.")
                             result_label.classes("text-green-500 font-bold")
+                            # Sauvegarde en base de données
+                            db.save_progress(lesson['module_id'], 1)
                         else:
                             result_label.set_text("[ERREUR] Échec. Regarde le terminal pour les détails.")
                             result_label.classes("text-red-500 font-bold")
@@ -76,8 +79,22 @@ def main_page():
     # --- BARRE DE NAVIGATION LATÉRALE ---
     with ui.left_drawer(value=True).classes('bg-gray-900 p-4') as sidebar:
         ui.label('Parcours').classes('text-h6 font-bold mb-4 text-gray-300')
+        
+        db.init_db()
+        progress_data = db.get_all_progress()
+        
         for lesson in lessons:
-            ui.button(lesson['title'], on_click=lambda l=lesson: show_lesson(l)).classes('w-full mb-2 bg-gray-800 hover:bg-gray-700 text-left')
+            mod_id = lesson['module_id']
+            
+            if mod_id in progress_data:
+                score = progress_data[mod_id]
+                btn_text = f"{lesson['title']} [Score: {score}]"
+                btn_color = 'bg-green-900 hover:bg-green-800 text-green-200'
+            else:
+                btn_text = f"{lesson['title']}"
+                btn_color = 'bg-gray-800 hover:bg-gray-700 text-white'
+                
+            ui.button(btn_text, on_click=lambda l=lesson: show_lesson(l)).classes(f'w-full mb-2 text-left {btn_color}')
 
     if lessons:
         show_lesson(lessons[0])
