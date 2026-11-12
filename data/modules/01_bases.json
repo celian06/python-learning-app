@@ -1,37 +1,119 @@
 {
-  "module_id": "python_01",
-  "title": "Variables et Fonctions : Les Fondations",
-  "difficulty": "Débutant",
-  "theory": "En Python, une variable est un espace mémoire nommé qui stocke une donnée. Le typage est **dynamique** : pas besoin de déclarer le type (`int`, `float`) à l'avance.\n\nUne fonction est un bloc de code réutilisable défini par le mot-clé `def`.\n\n```python\ndef calculer_carre(x):\n    # Retourne la valeur au carré\n    return x ** 2\n```\n\n> *Note d'architecture : Contrairement au C++, Python gère l'allocation mémoire automatiquement via son Garbage Collector.*",
+  "module_id": "python_01_bases",
+  "title": "Module 1 : Variables, Objets et Fonctions (Niveau Approfondi)",
+  "theory": "### 1. Modèle Mémoire : Tout est Objet\nEn Python, il n'existe pas de 'primitives' comme en C ou Java. Tout est objet : un entier `5` est un objet instancié en mémoire, et une variable est simplement un nom (une étiquette) qui référence cet objet.\n\n* **`id()`** : Retourne l'adresse mémoire (ou identifiant unique) d'un objet.\n* **`type()`** : Retourne la classe de l'objet.\n* **`is` vs `==`** : L'opérateur `is` compare les adresses mémoire (`id(a) == id(b)`), tandis que `==` compare les valeurs.\n\n```python\na = [1, 2, 3]\nb = a\nc = [1, 2, 3]\n\nprint(a is b)  # True : même référence mémoire\nprint(a is c)  # False : objets distincts en mémoire\nprint(a == c)  # True : valeurs identiques\n```\n\n### 2. Immutabilité vs Mutabilité\nC'est la notion la plus critique en ingénierie logicielle et en Data Science (notamment pour éviter les corruptions de buffers en NumPy/PyTorch) :\n* **Objets immuables (Immutable)** : `int`, `float`, `bool`, `str`, `tuple`, `frozenset`. Toute modification apparente crée en réalité un nouvel objet en mémoire.\n* **Objets mutables (Mutable)** : `list`, `dict`, `set`. Leur contenu peut être modifié *in-place* sans changer leur adresse mémoire.\n\n```python\n# Immutabilité (les entiers)\nx = 10\nprint(id(x))\nx += 1  # Crée un nouvel objet entier 11 en mémoire\nprint(id(x))  # L'adresse a changé !\n\n# Mutabilité (les listes)\ndata = [1, 2]\nprint(id(data))\ndata.append(3)  # Modifie l'objet existant in-place\nprint(id(data))  # L'adresse reste strictement identique\n```\n\n### 3. Namespace, Scope et Résolution LEGB\nUn namespace est un dictionnaire associant des noms à des objets. La résolution d'un nom suit strictement la règle **LEGB** :\n1. **L**ocal : À l'intérieur de la fonction en cours d'exécution.\n2. **E**nclosing : Dans les fonctions englobantes (closures).\n3. **G**lobal : Au niveau du module (fichier `.py`).\n4. **B**uilt-in : Le namespace natif de Python (`len`, `range`, `print`, etc.).\n\nSi l'on assigne une variable dans une fonction, elle devient locale par défaut. Pour modifier une variable globale, il faut expliciter le mot-clé `global`. Pour une variable dans une portée englobante (ex: fonction dans une fonction), on utilise `nonlocal`.\n\n### 4. Fonctions Avancées et Passage d'Arguments\nEn Python, les arguments sont passés par **assignation** (souvent appelé *pass-by-object-reference*). La fonction reçoit une copie de la référence de l'objet.\n* Si l'objet passé est **immuable**, la fonction ne peut pas modifier l'original.\n* Si l'objet passé est **mutable**, la fonction peut modifier l'état interne de l'objet.\n\n#### Empacking et Unpacking (`*args`, `**kwargs`)\n* `*args` collecte tous les arguments positionnels excédentaires dans un **tuple**.\n* `**kwargs` collecte tous les arguments nommés excédentaires dans un **dictionnaire**.\n\n```python\ndef configure_model(learning_rate: float, *layers: int, **optimizer_params) -> dict:\n    config = {\"lr\": learning_rate, \"layers\": layers, \"optim\": optimizer_params}\n    return config\n\n# Appel\ncfg = configure_model(0.001, 128, 64, 10, optimizer=\"Adam\", weight_decay=1e-4)\n```\n\n### 5. Fonctions de première classe et Lambdas\nLes fonctions en Python sont des objets de première classe : elles peuvent être assignées à des variables, stockées dans des structures de données, passées en argument ou retournées par d'autres fonctions.\n\nLes fonctions anonymes (`lambda`) permettent de définir des opérations courtes à la volée, souvent utilisées avec `map`, `filter` ou `sorted`.",
   "flashcards": [
     {
-      "question": "Comment définir une fonction en Python ?",
-      "answer": "En utilisant le mot-clé 'def' suivi du nom de la fonction, de parenthèses et de deux-points (:)."
+      "question": "Quelle est la différence fondamentale entre une variable en C/C++ et en Python ?",
+      "answer": "En C, une variable est un emplacement mémoire alloué de taille fixe. En Python, c'est une simple étiquette (référence) pointant vers un objet typé stocké en mémoire."
     },
     {
-      "question": "Le typage en Python est-il statique ou dynamique ?",
-      "answer": "Dynamique. Le type d'une variable est déduit lors de l'exécution en fonction de la valeur qui lui est assignée."
+      "question": "Que fait la fonction native id() en Python ?",
+      "answer": "Elle retourne l'adresse mémoire de l'objet (son identifiant unique sous forme d'entier)."
     },
     {
-      "question": "Quel mot-clé est utilisé pour renvoyer une valeur à la fin d'une fonction ?",
-      "answer": "Le mot-clé 'return'."
+      "question": "Quelle est la différence entre l'opérateur 'is' et l'opérateur '==' ?",
+      "answer": "'is' teste l'identité en mémoire (même adresse), tandis que '==' teste l'égalité des valeurs portées par les objets."
+    },
+    {
+      "question": "Citez les principaux types de données immuables (immutable) en Python.",
+      "answer": "int, float, bool, str, tuple, frozenset, bytes."
+    },
+    {
+      "question": "Citez les principaux types de données mutables (mutable) en Python.",
+      "answer": "list, dict, set, bytearray."
+    },
+    {
+      "question": "Que se passe-t-il en mémoire lorsqu'on modifie un objet immuable comme une chaîne de caractères (str) ?",
+      "answer": "Python désalloue ou ignore l'ancienne référence et crée un tout nouvel objet en mémoire avec une nouvelle adresse (`id`)."
+    },
+    {
+      "question": "Qu'est-ce que le mécanisme de 'Pass-by-Object-Reference' ?",
+      "answer": "Python transmet aux fonctions une copie de la référence (l'adresse mémoire) de l'objet, et non une copie physique de la donnée elle-même."
+    },
+    {
+      "question": "Que signifie l'acronyme LEGB dans le cadre de la résolution des portées (scopes) ?",
+      "answer": "Local, Enclosing, Global, Built-in. C'est l'ordre séquentiel dans lequel Python cherche la définition d'un nom de variable."
+    },
+    {
+      "question": "À quoi servent les mots-clés 'global' et 'nonlocal' dans une fonction ?",
+      "answer": "Ils permettent de casser l'isolation locale pour autoriser la ré assignation d'une variable appartenant respectivement au scope global (module) ou au scope englobant (closure)."
+    },
+    {
+      "question": "Qu'est-ce qu'un argument par défaut muable (Mutable Default Argument) et pourquoi est-ce un piège ?",
+      "answer": "C'est l'utilisation d'une liste ou d'un dict en valeur par défaut (ex: def f(x=[])). L'objet par défaut est instancié une seule fois lors de la définition de la fonction, et partagé entre tous les appels futurs."
+    },
+    {
+      "question": "Quelle structure de données est utilisée pour stocker '*args' à l'intérieur d'une fonction ?",
+      "answer": "Un tuple."
+    },
+    {
+      "question": "Quelle structure de données est utilisée pour stocker '**kwargs' à l'intérieur d'une fonction ?",
+      "answer": "Un dictionnaire."
+    },
+    {
+      "question": "Que signifie le fait que les fonctions soient des 'objets de première classe' (first-class citizens) ?",
+      "answer": "Qu'elles peuvent être manipulées comme n'importe quel autre objet : assignées à des variables, stockées dans des listes, passées en argument ou retournées par d'autres fonctions."
+    },
+    {
+      "question": "Quelle est la syntaxe générale d'une fonction lambda ?",
+      "answer": "lambda arguments: expression (elle ne peut contenir qu'une seule expression et retourne implicitement son résultat)."
     }
   ],
-  "code_quiz": {
-    "snippet": "x = 10\ndef add_five(num):\n    return num + 5\n\nx = add_five(x)\nprint(x)",
-    "options": ["10", "15", "5", "Erreur"],
-    "correct_answer": "15"
-  },
-
-  "project": {
-    "title": "Niveau 1 : La fonction de base",
-    "description": "Écris une fonction nommée 'calculer_prix_ttc' qui prend un prix hors taxe (float) et un taux de TVA (float, par exemple 0.20) et retourne le prix TTC arrondi à 2 décimales.",
-    "target_function": "calculer_prix_ttc",
-    "test_cases": [
-      {"input": [100.0, 0.20], "expected": 120.0},
-      {"input": [50.0, 0.05], "expected": 52.5}
-    ]
-  }
-
-  
+  "code_comprehension": [
+    {
+      "snippet": "a = [1, 2, 3]\nb = a\nb.append(4)\nprint(len(a))",
+      "options": ["3", "4", "Erreur", "None"],
+      "correct_answer": "4"
+    },
+    {
+      "snippet": "x = 10\n\ndef modify():\n    global x\n    x = 20\n\nmodify()\nprint(x)",
+      "options": ["10", "20", "Erreur de portée", "None"],
+      "correct_answer": "20"
+    },
+    {
+      "snippet": "def add_element(element, target=[]) :\n    target.append(element)\n    return target\n\nprint(add_element(1))\nprint(add_element(2))",
+      "options": ["[1] puis [2]", "[1] puis [1, 2]", "[1, 2] puis [1, 2]", "Erreur"],
+      "correct_answer": "[1] puis [1, 2]"
+    },
+    {
+      "snippet": "def compute(a, b=5, *args):\n    return a + b + sum(args)\n\nprint(compute(1, 2, 3, 4))",
+      "options": ["10", "15", "6", "Erreur"],
+      "correct_answer": "10"
+    },
+    {
+      "snippet": "t1 = (1, 2, [3, 4])\nt1[2].append(5)\nprint(len(t1[2]))",
+      "options": ["2", "3", "Erreur d'immutabilité", "None"],
+      "correct_answer": "3"
+    }
+  ],
+  "projects": [
+    {
+      "title": "Niveau 1 : Calcul d'Erreur Absolue",
+      "description": "Crée une fonction `calculate_mae` (Mean Absolute Error). Elle reçoit un tuple `args` contenant deux listes de même taille : `y_true` (valeurs réelles) et `y_pred` (prédictions). Elle doit retourner la moyenne des différences absolues (sans utiliser numpy ou math).",
+      "target_function": "calculate_mae",
+      "test_cases": [
+        {"input": [[1.0, 2.0, 3.0], [1.5, 1.5, 3.5]], "expected": 0.5},
+        {"input": [[0.0, 0.0], [1.0, 1.0]], "expected": 1.0}
+      ]
+    },
+    {
+      "title": "Niveau 2 : Filtrage de Signal avec Seuil",
+      "description": "Crée une fonction `apply_threshold`. Elle reçoit un tuple `args` contenant une liste de floats `signal` et un float `threshold`. Elle doit retourner une NOUVELLE liste où toute valeur inférieure à `threshold` est remplacée par 0.0. La liste d'origine ne doit pas être modifiée.",
+      "target_function": "apply_threshold",
+      "test_cases": [
+        {"input": [[0.5, 1.2, -0.3, 2.5], 1.0], "expected": [0.0, 1.2, 0.0, 2.5]},
+        {"input": [[-1.0, -5.0], 0.0], "expected": [0.0, 0.0]}
+      ]
+    },
+    {
+      "title": "Niveau 3 : Encodage One-Hot manuel",
+      "description": "Crée une fonction `one_hot_encode`. Elle reçoit un tuple `args` contenant une liste d'entiers `classes` et un entier `num_classes`. Elle doit retourner une liste de listes (matrice) où chaque entier est converti en un vecteur de taille `num_classes` rempli de 0, avec un 1 à l'index correspondant à la classe.",
+      "target_function": "one_hot_encode",
+      "test_cases": [
+        {"input": [[0, 2, 1], 3], "expected": [[1, 0, 0], [0, 0, 1], [0, 1, 0]]},
+        {"input": [[1], 2], "expected": [[0, 1]]}
+      ]
+    }
+  ]
 }
