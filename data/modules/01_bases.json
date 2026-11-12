@@ -2,7 +2,7 @@
   "module_id": "python_01",
   "title": "Variables et Fonctions : Les Fondations",
   "difficulty": "Débutant",
-  "theory": "En Python, une variable est un espace mémoire nommé qui stocke une donnée. Le typage est dynamique : pas besoin de déclarer le type (int, str) à l'avance. Une fonction (définie par 'def') est un bloc de code réutilisable qui prend des arguments en entrée et retourne un résultat avec 'return'.",
+  "theory": "En Python, une variable est un espace mémoire nommé qui stocke une donnée. Le typage est **dynamique** : pas besoin de déclarer le type (`int`, `float`) à l'avance.\n\nUne fonction est un bloc de code réutilisable défini par le mot-clé `def`.\n\n```python\ndef calculer_carre(x):\n    # Retourne la valeur au carré\n    return x ** 2\n```\n\n> *Note d'architecture : Contrairement au C++, Python gère l'allocation mémoire automatiquement via son Garbage Collector.*",
   "flashcards": [
     {
       "question": "Comment définir une fonction en Python ?",
